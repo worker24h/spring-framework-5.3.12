@@ -115,7 +115,7 @@ public class DefaultNamespaceHandlerResolver implements NamespaceHandlerResolver
 	@Override
 	@Nullable
 	public NamespaceHandler resolve(String namespaceUri) {
-		Map<String, Object> handlerMappings = getHandlerMappings();
+		Map<String, Object> handlerMappings = getHandlerMappings();//获取处理器映射器
 		Object handlerOrClassName = handlerMappings.get(namespaceUri);
 		if (handlerOrClassName == null) {
 			return null;
@@ -160,6 +160,14 @@ public class DefaultNamespaceHandlerResolver implements NamespaceHandlerResolver
 						logger.trace("Loading NamespaceHandler mappings from [" + this.handlerMappingsLocation + "]");
 					}
 					try {
+						//加载所有的META-INF/spring.handlers，这个配置文件中有映射关系
+						/**
+						 * 举例： spring-webmvc中META-INF/spring.handlers文件内容是
+						 * http\://www.springframework.org/schema/mvc=org.springframework.web.servlet.config.MvcNamespaceHandler
+						 * key == 是xml命名空间  value == 是该命名空间中定义的xml标签实际处理类
+						 * 比如：在springmvc中配置文件中有这个配置 <mvc:default-servlet-handler/>
+						 *      在MvcNamespaceHandler类中有对其处理
+						 */
 						Properties mappings =
 								PropertiesLoaderUtils.loadAllProperties(this.handlerMappingsLocation, this.classLoader);
 						if (logger.isTraceEnabled()) {
