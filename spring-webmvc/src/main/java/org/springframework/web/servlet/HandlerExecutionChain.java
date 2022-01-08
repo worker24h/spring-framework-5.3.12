@@ -42,9 +42,9 @@ public class HandlerExecutionChain {
 
 	private static final Log logger = LogFactory.getLog(HandlerExecutionChain.class);
 
-	private final Object handler;
+	private final Object handler; //处理请求的处理器
 
-	private final List<HandlerInterceptor> interceptorList = new ArrayList<>();
+	private final List<HandlerInterceptor> interceptorList = new ArrayList<>(); //处理请求的拦截器
 
 	private int interceptorIndex = -1;
 
@@ -146,7 +146,7 @@ public class HandlerExecutionChain {
 		for (int i = 0; i < this.interceptorList.size(); i++) {
 			HandlerInterceptor interceptor = this.interceptorList.get(i);
 			if (!interceptor.preHandle(request, response, this.handler)) {
-				triggerAfterCompletion(request, response, null);
+				triggerAfterCompletion(request, response, null);//拦截器完成方法，这里下标是从interceptorIndex开始计算
 				return false;
 			}
 			this.interceptorIndex = i;
@@ -172,7 +172,7 @@ public class HandlerExecutionChain {
 	 * has successfully completed and returned true.
 	 */
 	void triggerAfterCompletion(HttpServletRequest request, HttpServletResponse response, @Nullable Exception ex) {
-		for (int i = this.interceptorIndex; i >= 0; i--) {
+		for (int i = this.interceptorIndex; i >= 0; i--) {//注意这里是从interceptorIndex开始执行
 			HandlerInterceptor interceptor = this.interceptorList.get(i);
 			try {
 				interceptor.afterCompletion(request, response, this.handler, ex);

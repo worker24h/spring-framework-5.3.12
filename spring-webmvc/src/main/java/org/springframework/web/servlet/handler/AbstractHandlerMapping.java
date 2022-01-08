@@ -495,7 +495,7 @@ public abstract class AbstractHandlerMapping extends WebApplicationObjectSupport
 	@Override
 	@Nullable
 	public final HandlerExecutionChain getHandler(HttpServletRequest request) throws Exception {
-		Object handler = getHandlerInternal(request);
+		Object handler = getHandlerInternal(request); //根据请求获取处理器
 		if (handler == null) {
 			handler = getDefaultHandler();
 		}
@@ -604,7 +604,7 @@ public abstract class AbstractHandlerMapping extends WebApplicationObjectSupport
 		HandlerExecutionChain chain = (handler instanceof HandlerExecutionChain ?
 				(HandlerExecutionChain) handler : new HandlerExecutionChain(handler));
 
-		for (HandlerInterceptor interceptor : this.adaptedInterceptors) {
+		for (HandlerInterceptor interceptor : this.adaptedInterceptors) {// 拦截器处理
 			if (interceptor instanceof MappedInterceptor) {
 				MappedInterceptor mappedInterceptor = (MappedInterceptor) interceptor;
 				if (mappedInterceptor.matches(request)) {

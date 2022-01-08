@@ -41,6 +41,7 @@ import org.springframework.web.servlet.resource.DefaultServletHttpRequestHandler
  * @author Jeremy Grelle
  * @author Rossen Stoyanchev
  * @since 3.0.4
+ * 解析注解驱动标签，将DefaultServletHttpRequestHandler, SimpleUrlHandlerMapping，HttpRequestHandlerAdapter等进行注册
  */
 class DefaultServletHandlerBeanDefinitionParser implements BeanDefinitionParser {
 

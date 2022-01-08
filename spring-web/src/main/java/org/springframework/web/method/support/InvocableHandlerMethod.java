@@ -143,7 +143,7 @@ public class InvocableHandlerMethod extends HandlerMethod {
 	public Object invokeForRequest(NativeWebRequest request, @Nullable ModelAndViewContainer mavContainer,
 			Object... providedArgs) throws Exception {
 
-		Object[] args = getMethodArgumentValues(request, mavContainer, providedArgs);
+		Object[] args = getMethodArgumentValues(request, mavContainer, providedArgs); //获取控制器方法实参
 		if (logger.isTraceEnabled()) {
 			logger.trace("Arguments: " + Arrays.toString(args));
 		}
@@ -160,7 +160,7 @@ public class InvocableHandlerMethod extends HandlerMethod {
 			Object... providedArgs) throws Exception {
 
 		MethodParameter[] parameters = getMethodParameters();
-		if (ObjectUtils.isEmpty(parameters)) {
+		if (ObjectUtils.isEmpty(parameters)) {//无参的控制器方法
 			return EMPTY_ARGS;
 		}
 

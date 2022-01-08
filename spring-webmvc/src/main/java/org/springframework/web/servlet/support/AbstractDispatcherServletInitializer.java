@@ -58,9 +58,14 @@ public abstract class AbstractDispatcherServletInitializer extends AbstractConte
 	public static final String DEFAULT_SERVLET_NAME = "dispatcher";
 
 
+	/**
+	 * Servlet启动回调方法
+	 * @param servletContext -- 上下文
+	 * @throws ServletException
+	 */
 	@Override
 	public void onStartup(ServletContext servletContext) throws ServletException {
-		super.onStartup(servletContext);
+		super.onStartup(servletContext); //调用父类的onStartup
 		registerDispatcherServlet(servletContext);
 	}
 
@@ -76,27 +81,30 @@ public abstract class AbstractDispatcherServletInitializer extends AbstractConte
 	 * @param servletContext the context to register the servlet against
 	 */
 	protected void registerDispatcherServlet(ServletContext servletContext) {
-		String servletName = getServletName();
+		String servletName = getServletName(); // dispatcher
 		Assert.hasLength(servletName, "getServletName() must not return null or empty");
 
+		//创建ioc容器 接收
 		WebApplicationContext servletAppContext = createServletApplicationContext();
 		Assert.notNull(servletAppContext, "createServletApplicationContext() must not return null");
 
+		// 创建DispatcherServlet对象，用父类接收
 		FrameworkServlet dispatcherServlet = createDispatcherServlet(servletAppContext);
 		Assert.notNull(dispatcherServlet, "createDispatcherServlet(WebApplicationContext) must not return null");
 		dispatcherServlet.setContextInitializers(getServletApplicationContextInitializers());
 
+		//动态注册Servlet
 		ServletRegistration.Dynamic registration = servletContext.addServlet(servletName, dispatcherServlet);
 		if (registration == null) {
 			throw new IllegalStateException("Failed to register servlet with name '" + servletName + "'. " +
 					"Check if there is another servlet registered under the same name.");
 		}
 
-		registration.setLoadOnStartup(1);
-		registration.addMapping(getServletMappings());
+		registration.setLoadOnStartup(1); //启动顺序
+		registration.addMapping(getServletMappings()); //servlet-mapping 映射器注册， 这个接口是由实现类提供
 		registration.setAsyncSupported(isAsyncSupported());
 
-		Filter[] filters = getServletFilters();
+		Filter[] filters = getServletFilters(); //注册过滤器， 这个接口是由实现类提供
 		if (!ObjectUtils.isEmpty(filters)) {
 			for (Filter filter : filters) {
 				registerServletFilter(servletContext, filter);

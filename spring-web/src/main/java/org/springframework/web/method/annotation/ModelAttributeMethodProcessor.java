@@ -144,7 +144,7 @@ public class ModelAttributeMethodProcessor implements HandlerMethodArgumentResol
 		else {
 			// Create attribute instance
 			try {
-				attribute = createAttribute(name, parameter, binderFactory, webRequest);
+				attribute = createAttribute(name, parameter, binderFactory, webRequest); //控制器方法形参对象
 			}
 			catch (BindException ex) {
 				if (isBindExceptionRequired(parameter)) {
@@ -168,7 +168,7 @@ public class ModelAttributeMethodProcessor implements HandlerMethodArgumentResol
 			WebDataBinder binder = binderFactory.createBinder(webRequest, attribute, name);
 			if (binder.getTarget() != null) {
 				if (!mavContainer.isBindingDisabled(name)) {
-					bindRequestParameters(binder, webRequest);
+					bindRequestParameters(binder, webRequest); //成员变量赋值，调用set方法
 				}
 				validateIfApplicable(binder, parameter);
 				if (binder.getBindingResult().hasErrors() && isBindExceptionRequired(binder, parameter)) {

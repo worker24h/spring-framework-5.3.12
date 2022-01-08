@@ -105,7 +105,7 @@ public abstract class AbstractNamedValueMethodArgumentResolver implements Handle
 					"Specified name must not resolve to null: [" + namedValueInfo.name + "]");
 		}
 
-		Object arg = resolveName(resolvedName.toString(), nestedParameter, webRequest);
+		Object arg = resolveName(resolvedName.toString(), nestedParameter, webRequest);//从request.GetParameter中获取参数的值
 		if (arg == null) {
 			if (namedValueInfo.defaultValue != null) {
 				arg = resolveEmbeddedValuesAndExpressions(namedValueInfo.defaultValue);
@@ -122,7 +122,7 @@ public abstract class AbstractNamedValueMethodArgumentResolver implements Handle
 		if (binderFactory != null) {
 			WebDataBinder binder = binderFactory.createBinder(webRequest, null, namedValueInfo.name);
 			try {
-				arg = binder.convertIfNecessary(arg, parameter.getParameterType(), parameter);
+				arg = binder.convertIfNecessary(arg, parameter.getParameterType(), parameter);//类型转换 比如json to pojo
 			}
 			catch (ConversionNotSupportedException ex) {
 				throw new MethodArgumentConversionNotSupportedException(arg, ex.getRequiredType(),

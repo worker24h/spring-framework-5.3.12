@@ -377,7 +377,7 @@ public abstract class AbstractHandlerMethodMapping<T> extends AbstractHandlerMap
 	@Override
 	@Nullable
 	protected HandlerMethod getHandlerInternal(HttpServletRequest request) throws Exception {
-		String lookupPath = initLookupPath(request);
+		String lookupPath = initLookupPath(request); //获取请求地址
 		this.mappingRegistry.acquireReadLock();
 		try {
 			HandlerMethod handlerMethod = lookupHandlerMethod(lookupPath, request);
@@ -400,12 +400,12 @@ public abstract class AbstractHandlerMethodMapping<T> extends AbstractHandlerMap
 	@Nullable
 	protected HandlerMethod lookupHandlerMethod(String lookupPath, HttpServletRequest request) throws Exception {
 		List<Match> matches = new ArrayList<>();
-		List<T> directPathMatches = this.mappingRegistry.getMappingsByDirectPath(lookupPath);
+		List<T> directPathMatches = this.mappingRegistry.getMappingsByDirectPath(lookupPath);//可能获取到多个相同地址，但是method不同的处理器映射器
 		if (directPathMatches != null) {
-			addMatchingMappings(directPathMatches, matches, request);
+			addMatchingMappings(directPathMatches, matches, request); //在做精准匹配
 		}
 		if (matches.isEmpty()) {
-			addMatchingMappings(this.mappingRegistry.getRegistrations().keySet(), matches, request);
+			addMatchingMappings(this.mappingRegistry.getRegistrations().keySet(), matches, request); //精准匹配
 		}
 		if (!matches.isEmpty()) {
 			Match bestMatch = matches.get(0);

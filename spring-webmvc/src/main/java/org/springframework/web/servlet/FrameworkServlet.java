@@ -527,8 +527,8 @@ public abstract class FrameworkServlet extends HttpServletBean implements Applic
 		long startTime = System.currentTimeMillis();
 
 		try {
-			this.webApplicationContext = initWebApplicationContext();
-			initFrameworkServlet();
+			this.webApplicationContext = initWebApplicationContext(); //初始化容器
+			initFrameworkServlet(); //默认是空
 		}
 		catch (ServletException | RuntimeException ex) {
 			logger.error("Context initialization failed", ex);
@@ -562,7 +562,7 @@ public abstract class FrameworkServlet extends HttpServletBean implements Applic
 				WebApplicationContextUtils.getWebApplicationContext(getServletContext());
 		WebApplicationContext wac = null;
 
-		if (this.webApplicationContext != null) {
+		if (this.webApplicationContext != null) {//表示在构造时候注入了
 			// A context instance was injected at construction time -> use it
 			wac = this.webApplicationContext;
 			if (wac instanceof ConfigurableWebApplicationContext) {
@@ -588,7 +588,7 @@ public abstract class FrameworkServlet extends HttpServletBean implements Applic
 		}
 		if (wac == null) {
 			// No context instance is defined for this servlet -> create a local one
-			wac = createWebApplicationContext(rootContext);
+			wac = createWebApplicationContext(rootContext); //创建容器
 		}
 
 		if (!this.refreshEventReceived) {
@@ -602,7 +602,7 @@ public abstract class FrameworkServlet extends HttpServletBean implements Applic
 
 		if (this.publishContext) {
 			// Publish the context as a servlet context attribute.
-			String attrName = getServletContextAttributeName();
+			String attrName = getServletContextAttributeName(); //org.springframework.web.servlet.FrameworkServlet.CONTEXT.Default
 			getServletContext().setAttribute(attrName, wac);
 		}
 
@@ -649,20 +649,22 @@ public abstract class FrameworkServlet extends HttpServletBean implements Applic
 	 * @see org.springframework.web.context.support.XmlWebApplicationContext
 	 */
 	protected WebApplicationContext createWebApplicationContext(@Nullable ApplicationContext parent) {
-		Class<?> contextClass = getContextClass();
+		Class<?> contextClass = getContextClass(); //默认是XmlWebApplicationContext
+		//判断ConfigurableWebApplicationContext是否为contextClass的父类
 		if (!ConfigurableWebApplicationContext.class.isAssignableFrom(contextClass)) {
 			throw new ApplicationContextException(
 					"Fatal initialization error in servlet with name '" + getServletName() +
 					"': custom WebApplicationContext class [" + contextClass.getName() +
 					"] is not of type ConfigurableWebApplicationContext");
 		}
+		//基于反射，构造对象
 		ConfigurableWebApplicationContext wac =
 				(ConfigurableWebApplicationContext) BeanUtils.instantiateClass(contextClass);
 
 		wac.setEnvironment(getEnvironment());
 		wac.setParent(parent);
 		String configLocation = getContextConfigLocation();
-		if (configLocation != null) {
+		if (configLocation != null) {//返回web.xml文件中init-param标签值，例如: classpath:springmvc.xml
 			wac.setConfigLocation(configLocation);
 		}
 		configureAndRefreshWebApplicationContext(wac);
@@ -679,6 +681,7 @@ public abstract class FrameworkServlet extends HttpServletBean implements Applic
 			}
 			else {
 				// Generate default id...
+				// for example ==> org.springframework.web.context.WebApplicationContext:/springmvc01/Default
 				wac.setId(ConfigurableWebApplicationContext.APPLICATION_CONTEXT_ID_PREFIX +
 						ObjectUtils.getDisplayString(getServletContext().getContextPath()) + '/' + getServletName());
 			}
@@ -697,9 +700,9 @@ public abstract class FrameworkServlet extends HttpServletBean implements Applic
 			((ConfigurableWebEnvironment) env).initPropertySources(getServletContext(), getServletConfig());
 		}
 
-		postProcessWebApplicationContext(wac);
-		applyInitializers(wac);
-		wac.refresh();
+		postProcessWebApplicationContext(wac); //后置处理器 处理wac，默认是空
+		applyInitializers(wac); //执行初始化器
+		wac.refresh(); //执行AbstractApplicationContext中refresh方法，这个地方就和spring关联起来了
 	}
 
 	/**

@@ -53,7 +53,7 @@ public abstract class AbstractAnnotationConfigDispatcherServletInitializer
 	@Override
 	@Nullable
 	protected WebApplicationContext createRootApplicationContext() {
-		Class<?>[] configClasses = getRootConfigClasses();
+		Class<?>[] configClasses = getRootConfigClasses(); //获取root config class，这里通常是spring的配置类
 		if (!ObjectUtils.isEmpty(configClasses)) {
 			AnnotationConfigWebApplicationContext context = new AnnotationConfigWebApplicationContext();
 			context.register(configClasses);
@@ -84,6 +84,7 @@ public abstract class AbstractAnnotationConfigDispatcherServletInitializer
 	 * {@linkplain #createRootApplicationContext() root application context}.
 	 * @return the configuration for the root application context, or {@code null}
 	 * if creation and registration of a root context is not desired
+	 * 通常是spring配置类，用于代替spring.xml
 	 */
 	@Nullable
 	protected abstract Class<?>[] getRootConfigClasses();
@@ -93,6 +94,8 @@ public abstract class AbstractAnnotationConfigDispatcherServletInitializer
 	 * {@linkplain #createServletApplicationContext() Servlet application context}.
 	 * @return the configuration for the Servlet application context, or
 	 * {@code null} if all configuration is specified through root config classes.
+	 *
+	 * 通常是springmvc配置类，用于代替springmvc.xml
 	 */
 	@Nullable
 	protected abstract Class<?>[] getServletConfigClasses();

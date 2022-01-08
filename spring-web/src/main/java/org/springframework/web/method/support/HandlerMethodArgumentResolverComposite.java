@@ -118,6 +118,9 @@ public class HandlerMethodArgumentResolverComposite implements HandlerMethodArgu
 			throw new IllegalArgumentException("Unsupported parameter type [" +
 					parameter.getParameterType().getName() + "]. supportsParameter should be called first.");
 		}
+		//根据不同resolver 处理方法不一样
+		//ServletModelAttributeMethodProcessor中的方法 用于控制器方法形参是pojo
+		//RequestResponseBodyMethodProcessor中的方法，用于json转成pojo，例如 public User userFromJson(@RequestBody User user) {
 		return resolver.resolveArgument(parameter, mavContainer, webRequest, binderFactory);
 	}
 
