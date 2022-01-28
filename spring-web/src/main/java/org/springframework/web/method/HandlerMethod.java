@@ -68,7 +68,7 @@ public class HandlerMethod {
 	/** Logger that is available to subclasses. */
 	protected static final Log logger = LogFactory.getLog(HandlerMethod.class);
 
-	private final Object bean;
+	private final Object bean; //类对戏
 
 	@Nullable
 	private final BeanFactory beanFactory;
@@ -78,11 +78,11 @@ public class HandlerMethod {
 
 	private final Class<?> beanType;
 
-	private final Method method;
+	private final Method method; //处理请求的方法对象
 
 	private final Method bridgedMethod;
 
-	private final MethodParameter[] parameters;
+	private final MethodParameter[] parameters; //方法需要的参数
 
 	@Nullable
 	private HttpStatus responseStatus;

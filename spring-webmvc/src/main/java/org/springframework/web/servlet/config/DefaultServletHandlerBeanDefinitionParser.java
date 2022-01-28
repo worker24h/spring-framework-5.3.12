@@ -50,25 +50,29 @@ class DefaultServletHandlerBeanDefinitionParser implements BeanDefinitionParser 
 	public BeanDefinition parse(Element element, ParserContext parserContext) {
 		Object source = parserContext.extractSource(element);
 
-		String defaultServletName = element.getAttribute("default-servlet-name");
+		String defaultServletName = element.getAttribute("default-servlet-name"); //获取属性的值
+		//创建BeanDefinition
 		RootBeanDefinition defaultServletHandlerDef = new RootBeanDefinition(DefaultServletHttpRequestHandler.class);
 		defaultServletHandlerDef.setSource(source);
 		defaultServletHandlerDef.setRole(BeanDefinition.ROLE_INFRASTRUCTURE);
 		if (StringUtils.hasText(defaultServletName)) {
 			defaultServletHandlerDef.getPropertyValues().add("defaultServletName", defaultServletName);
 		}
+		//注册到BeanDefinitionRegistry
 		String defaultServletHandlerName = parserContext.getReaderContext().generateBeanName(defaultServletHandlerDef);
 		parserContext.getRegistry().registerBeanDefinition(defaultServletHandlerName, defaultServletHandlerDef);
 		parserContext.registerComponent(new BeanComponentDefinition(defaultServletHandlerDef, defaultServletHandlerName));
 
+		//这里很关键，将处理器映射器和Servlet进行关联
 		Map<String, String> urlMap = new ManagedMap<>();
-		urlMap.put("/**", defaultServletHandlerName);
+		urlMap.put("/**", defaultServletHandlerName); //处理所有请求
 
+		//创建BeanDefinition，这个SimplerUrlHandlerMapping也是一个处理器映射器
 		RootBeanDefinition handlerMappingDef = new RootBeanDefinition(SimpleUrlHandlerMapping.class);
 		handlerMappingDef.setSource(source);
 		handlerMappingDef.setRole(BeanDefinition.ROLE_INFRASTRUCTURE);
 		handlerMappingDef.getPropertyValues().add("urlMap", urlMap);
-
+		//注册到BeanDefinitionRegistry
 		String handlerMappingBeanName = parserContext.getReaderContext().generateBeanName(handlerMappingDef);
 		parserContext.getRegistry().registerBeanDefinition(handlerMappingBeanName, handlerMappingDef);
 		parserContext.registerComponent(new BeanComponentDefinition(handlerMappingDef, handlerMappingBeanName));

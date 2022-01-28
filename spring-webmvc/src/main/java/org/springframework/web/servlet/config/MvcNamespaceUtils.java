@@ -69,11 +69,11 @@ public abstract class MvcNamespaceUtils {
 
 	private static final String HANDLER_MAPPING_INTROSPECTOR_BEAN_NAME = "mvcHandlerMappingIntrospector";
 
-
+	//注册组件
 	public static void registerDefaultComponents(ParserContext context, @Nullable Object source) {
 		registerBeanNameUrlHandlerMapping(context, source);
-		registerHttpRequestHandlerAdapter(context, source);
-		registerSimpleControllerHandlerAdapter(context, source);
+		registerHttpRequestHandlerAdapter(context, source); //注册HttpRequestHandlerAdapter 用于执行default-servlet，比如获取静态资源
+		registerSimpleControllerHandlerAdapter(context, source); //注册SimpleControllerHandlerAdapter 自定义类实现Controller接口
 		registerHandlerMappingIntrospector(context, source);
 		registerLocaleResolver(context, source);
 		registerThemeResolver(context, source);

@@ -65,6 +65,8 @@ import org.springframework.web.util.pattern.PathPatternParser;
  * @since 3.1
  * @param <T> the mapping for a {@link HandlerMethod} containing the conditions
  * needed to match the handler method to an incoming request.
+ *
+ *  T == {@link org.springframework.web.servlet.mvc.method.RequestMappingInfo}
  */
 public abstract class AbstractHandlerMethodMapping<T> extends AbstractHandlerMapping implements InitializingBean {
 
@@ -402,7 +404,7 @@ public abstract class AbstractHandlerMethodMapping<T> extends AbstractHandlerMap
 		List<Match> matches = new ArrayList<>();
 		List<T> directPathMatches = this.mappingRegistry.getMappingsByDirectPath(lookupPath);//可能获取到多个相同地址，但是method不同的处理器映射器
 		if (directPathMatches != null) {
-			addMatchingMappings(directPathMatches, matches, request); //在做精准匹配
+			addMatchingMappings(directPathMatches, matches, request); //再做精准匹配，比如说按照参数，method等方式进行精准匹配
 		}
 		if (matches.isEmpty()) {
 			addMatchingMappings(this.mappingRegistry.getRegistrations().keySet(), matches, request); //精准匹配
@@ -571,13 +573,13 @@ public abstract class AbstractHandlerMethodMapping<T> extends AbstractHandlerMap
 	 */
 	class MappingRegistry {
 
-		private final Map<T, MappingRegistration<T>> registry = new HashMap<>();
+		private final Map<T, MappingRegistration<T>> registry = new HashMap<>(); //T是mapping类型，比如RequestMappingInfo
 
-		private final MultiValueMap<String, T> pathLookup = new LinkedMultiValueMap<>();
+		private final MultiValueMap<String, T> pathLookup = new LinkedMultiValueMap<>(); //直接映射查找优先级最高， T是mapping类型，比如RequestMappingInfo
 
-		private final Map<String, List<HandlerMethod>> nameLookup = new ConcurrentHashMap<>();
+		private final Map<String, List<HandlerMethod>> nameLookup = new ConcurrentHashMap<>();//按照名称注册
 
-		private final Map<HandlerMethod, CorsConfiguration> corsLookup = new ConcurrentHashMap<>();
+		private final Map<HandlerMethod, CorsConfiguration> corsLookup = new ConcurrentHashMap<>(); //跨域用的map
 
 		private final ReentrantReadWriteLock readWriteLock = new ReentrantReadWriteLock();
 
@@ -631,16 +633,17 @@ public abstract class AbstractHandlerMethodMapping<T> extends AbstractHandlerMap
 		public void register(T mapping, Object handler, Method method) {
 			this.readWriteLock.writeLock().lock();
 			try {
-				HandlerMethod handlerMethod = createHandlerMethod(handler, method);
+				HandlerMethod handlerMethod = createHandlerMethod(handler, method); //包装类
 				validateMethodMapping(handlerMethod, mapping);
 
 				Set<String> directPaths = AbstractHandlerMethodMapping.this.getDirectPaths(mapping);
 				for (String path : directPaths) {
-					this.pathLookup.add(path, mapping);
+					this.pathLookup.add(path, mapping); //直接映射
 				}
 
 				String name = null;
-				if (getNamingStrategy() != null) {
+				if (getNamingStrategy() != null) {//按照name进行存储映射
+					//例如控制器类为 MyHelloController， 处理方法是hello ==> name=MHC#hello
 					name = getNamingStrategy().getName(handlerMethod, mapping);
 					addMappingName(name, handlerMethod);
 				}
@@ -648,9 +651,9 @@ public abstract class AbstractHandlerMethodMapping<T> extends AbstractHandlerMap
 				CorsConfiguration corsConfig = initCorsConfiguration(handler, method, mapping);
 				if (corsConfig != null) {
 					corsConfig.validateAllowCredentials();
-					this.corsLookup.put(handlerMethod, corsConfig);
+					this.corsLookup.put(handlerMethod, corsConfig); //跨域相关的map
 				}
-
+				//存储一个全局map，针对所有请求映射
 				this.registry.put(mapping,
 						new MappingRegistration<>(mapping, handlerMethod, directPaths, name, corsConfig != null));
 			}

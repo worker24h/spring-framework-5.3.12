@@ -58,6 +58,7 @@ import org.springframework.util.CollectionUtils;
  */
 public class SimpleUrlHandlerMapping extends AbstractUrlHandlerMapping {
 
+	//key == "/**", value=servlet名字， 参考DefaultServletHandlerBeanDefinitionParser
 	private final Map<String, Object> urlMap = new LinkedHashMap<>();
 
 

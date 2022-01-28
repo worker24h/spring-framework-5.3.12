@@ -70,7 +70,7 @@ public abstract class AbstractUrlHandlerMapping extends AbstractHandlerMapping i
 
 	private boolean lazyInitHandlers = false;
 
-	private final Map<String, Object> handlerMap = new LinkedHashMap<>();
+	private final Map<String, Object> handlerMap = new LinkedHashMap<>(); // key=uri value可能是名字，也可能是对象
 
 	private final Map<PathPattern, Object> pathPatternHandlerMap = new LinkedHashMap<>();
 
@@ -442,7 +442,7 @@ public abstract class AbstractUrlHandlerMapping extends AbstractHandlerMapping i
 				}
 				setDefaultHandler(resolvedHandler);
 			}
-			else {
+			else {// 其他
 				this.handlerMap.put(urlPath, resolvedHandler);
 				if (getPatternParser() != null) {
 					this.pathPatternHandlerMap.put(getPatternParser().parse(urlPath), resolvedHandler);
