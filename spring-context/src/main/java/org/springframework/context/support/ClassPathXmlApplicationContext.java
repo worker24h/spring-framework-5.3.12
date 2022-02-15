@@ -139,8 +139,8 @@ public class ClassPathXmlApplicationContext extends AbstractXmlApplicationContex
 			throws BeansException {
 
 		super(parent);
-		setConfigLocations(configLocations);
-		if (refresh) {
+		setConfigLocations(configLocations); //spring的配置文件例如spring.xml
+		if (refresh) {//刷新
 			refresh();
 		}
 	}

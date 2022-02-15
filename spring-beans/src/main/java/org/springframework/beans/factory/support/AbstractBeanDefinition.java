@@ -139,17 +139,17 @@ public abstract class AbstractBeanDefinition extends BeanMetadataAttributeAccess
 
 
 	@Nullable
-	private volatile Object beanClass;
+	private volatile Object beanClass; //bean name
 
 	@Nullable
-	private String scope = SCOPE_DEFAULT;
+	private String scope = SCOPE_DEFAULT; //作用域  SCOPE_SINGLETON
 
-	private boolean abstractFlag = false;
+	private boolean abstractFlag = false; //是否为抽象
 
 	@Nullable
 	private Boolean lazyInit;
 
-	private int autowireMode = AUTOWIRE_NO;
+	private int autowireMode = AUTOWIRE_NO; //自动注入
 
 	private int dependencyCheck = DEPENDENCY_CHECK_NONE;
 
@@ -158,6 +158,7 @@ public abstract class AbstractBeanDefinition extends BeanMetadataAttributeAccess
 
 	private boolean autowireCandidate = true;
 
+	//是否为主要的， 在按照类型给属性注入时，若出现冲突则查看是否存在@Primary注解 当存在这个注解则字段为true
 	private boolean primary = false;
 
 	private final Map<String, AutowireCandidateQualifier> qualifiers = new LinkedHashMap<>();
@@ -170,10 +171,10 @@ public abstract class AbstractBeanDefinition extends BeanMetadataAttributeAccess
 	private boolean lenientConstructorResolution = true;
 
 	@Nullable
-	private String factoryBeanName;
+	private String factoryBeanName; //工厂bean名字
 
 	@Nullable
-	private String factoryMethodName;
+	private String factoryMethodName; //工厂方法名字
 
 	@Nullable
 	private ConstructorArgumentValues constructorArgumentValues;
@@ -193,7 +194,7 @@ public abstract class AbstractBeanDefinition extends BeanMetadataAttributeAccess
 
 	private boolean enforceDestroyMethod = true;
 
-	private boolean synthetic = false;
+	private boolean synthetic = false; //是否是合成的BeanDefinition aop相关内容才会设置成true
 
 	private int role = BeanDefinition.ROLE_APPLICATION;
 

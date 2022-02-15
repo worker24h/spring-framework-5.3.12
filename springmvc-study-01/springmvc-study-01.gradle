@@ -1,0 +1,25 @@
+//plugins {
+//    id 'java'
+//    id 'war'
+//}
+//
+//group 'org.springframework'
+//version '5.3.12'
+//
+//repositories {
+//    mavenCentral()
+//}
+
+description = "SpringMvc Study 01"
+
+apply plugin: "kotlin"
+
+dependencies {
+    api(fileTree(dir:'lib',includes: ['*jar']))
+    api(project(":spring-aop"))
+    api(project(":spring-beans"))
+    api(project(":spring-context"))
+    api(project(":spring-core"))
+    api(project(":spring-expression"))
+    api(project(":spring-webmvc"))
+}

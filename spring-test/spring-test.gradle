@@ -90,7 +90,7 @@ test {
 		excludeTags "failing-test-case"
 	}
 	// We use `include` instead of `filter.includeTestsMatching`, since
-	// the latter results in some tests being executed/reported
+	// the latter q	12results in some tests being executed/reported
 	// multiple times.
 	include(["**/*Tests.class", "**/*Test.class"])
 	filter.excludeTestsMatching("*TestCase")

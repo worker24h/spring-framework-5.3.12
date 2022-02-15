@@ -1,0 +1,14 @@
+description = "Spring Study 01"
+
+apply plugin: "kotlin"
+
+dependencies {
+    api(project(":spring-aop"))
+    api(project(":spring-aspects"))
+    api(project(":spring-beans"))
+    api(project(":spring-context"))
+    api(project(":spring-core"))
+    api(project(":spring-expression"))
+    api(project(":spring-web"))
+}
+

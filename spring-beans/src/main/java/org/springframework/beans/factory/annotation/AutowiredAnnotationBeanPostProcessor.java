@@ -395,7 +395,7 @@ public class AutowiredAnnotationBeanPostProcessor implements SmartInstantiationA
 	@Override
 	public PropertyValues postProcessProperties(PropertyValues pvs, Object bean, String beanName) {
 		InjectionMetadata metadata = findAutowiringMetadata(beanName, bean.getClass(), pvs);
-		try {
+		try {//注入数据
 			metadata.inject(bean, beanName, pvs);
 		}
 		catch (BeanCreationException ex) {
@@ -635,7 +635,7 @@ public class AutowiredAnnotationBeanPostProcessor implements SmartInstantiationA
 					value = resolveFieldValue(field, bean, beanName);
 				}
 			}
-			else {
+			else {//获取字段值
 				value = resolveFieldValue(field, bean, beanName);
 			}
 			if (value != null) {
@@ -652,7 +652,7 @@ public class AutowiredAnnotationBeanPostProcessor implements SmartInstantiationA
 			Assert.state(beanFactory != null, "No BeanFactory available");
 			TypeConverter typeConverter = beanFactory.getTypeConverter();
 			Object value;
-			try {
+			try {//处理字段依赖
 				value = beanFactory.resolveDependency(desc, beanName, autowiredBeanNames, typeConverter);
 			}
 			catch (BeansException ex) {

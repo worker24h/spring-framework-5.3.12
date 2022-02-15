@@ -66,9 +66,9 @@ public class AnnotationConfigApplicationContext extends GenericApplicationContex
 	 */
 	public AnnotationConfigApplicationContext() {
 		StartupStep createAnnotatedBeanDefReader = this.getApplicationStartup().start("spring.context.annotated-bean-reader.create");
-		this.reader = new AnnotatedBeanDefinitionReader(this);
+		this.reader = new AnnotatedBeanDefinitionReader(this); // reader
 		createAnnotatedBeanDefReader.end();
-		this.scanner = new ClassPathBeanDefinitionScanner(this);
+		this.scanner = new ClassPathBeanDefinitionScanner(this);//扫描器
 	}
 
 	/**
@@ -102,8 +102,8 @@ public class AnnotationConfigApplicationContext extends GenericApplicationContex
 	 */
 	public AnnotationConfigApplicationContext(String... basePackages) {
 		this();
-		scan(basePackages);
-		refresh();
+		scan(basePackages); //包扫描 注册bean definitions
+		refresh(); //AbstractApplicationContext refresh
 	}
 
 
@@ -183,7 +183,7 @@ public class AnnotationConfigApplicationContext extends GenericApplicationContex
 		Assert.notEmpty(basePackages, "At least one base package must be specified");
 		StartupStep scanPackages = this.getApplicationStartup().start("spring.context.base-packages.scan")
 				.tag("packages", () -> Arrays.toString(basePackages));
-		this.scanner.scan(basePackages);
+		this.scanner.scan(basePackages); //扫描包 扫描出用@Component注解标注的类
 		scanPackages.end();
 	}
 

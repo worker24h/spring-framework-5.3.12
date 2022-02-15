@@ -39,6 +39,8 @@ include "spring-webmvc"
 include "spring-websocket"
 include "framework-bom"
 include "integration-tests"
+include "spring-study-01"
+include 'springmvc-study-01'
 
 rootProject.name = "spring"
 rootProject.children.each {project ->
@@ -59,3 +61,5 @@ settings.gradle.projectsLoaded {
 		}
 	}
 }
+include 'springmvc-study-03'
+
